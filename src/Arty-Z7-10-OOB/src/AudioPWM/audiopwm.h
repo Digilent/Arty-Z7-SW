@@ -107,11 +107,9 @@ struct bits {
 	u32 u32bit31:1;
 };
 
-union ubitField{
-	u8 rgu8[4];
-	u32 l;
-	struct bits bit;
-}Audio_BitField;
+
+extern union ubitField Audio_BitField;
+
 
 /************************** Function Prototypes ******************************/
 
