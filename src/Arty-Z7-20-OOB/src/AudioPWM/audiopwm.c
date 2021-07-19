@@ -64,6 +64,11 @@
 /************************** Constant Definitions *****************************/
 
 /************************** Variable Definitions *****************************/
+union ubitField{
+	u8 rgu8[4];
+	u32 l;
+	struct bits bit;
+}Audio_BitField;
 
 /************************** Function Prototypes ******************************/
 
