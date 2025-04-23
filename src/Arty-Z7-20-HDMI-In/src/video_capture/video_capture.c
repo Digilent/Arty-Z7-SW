@@ -104,6 +104,7 @@
 
 #include "video_capture.h"
 #include "xdebug.h"
+#include <xil_types.h>
 
 /* ------------------------------------------------------------ */
 /*				Procedure Definitions							*/
@@ -180,7 +181,7 @@ int VideoStart(VideoCapture *videoPtr)
 	videoPtr->vdmaConfig.Stride = videoPtr->stride;
 	for (i = 0; i < VIDEO_NUM_FRAMES; i++)
 	{
-		videoPtr->vdmaConfig.FrameStoreStartAddr[i] = (u32)  videoPtr->framePtr[i];
+		videoPtr->vdmaConfig.FrameStoreStartAddr[i] = (UINTPTR)videoPtr->framePtr[i];
 	}
 
 	xdbg_printf(XDBG_DEBUG_GENERAL, "Starting VDMA for Video capture\n\r");
@@ -244,7 +245,7 @@ int VideoStart(VideoCapture *videoPtr)
 **		can all be called at will.
 **
 */
-int VideoInitialize(VideoCapture *videoPtr, INTC *intCtrl, XAxiVdma *vdma, u16 gpioId, u16 vtcId, u32 vtcIrptId, u8 *framePtr[VIDEO_NUM_FRAMES], u32 stride, u32 startOnDet)
+int VideoInitialize(VideoCapture *videoPtr, INTC *intCtrl, XAxiVdma *vdma, u32 gpioId, u32 vtcId, u32 vtcIrptId, u8 *framePtr[VIDEO_NUM_FRAMES], u32 stride, u32 startOnDet)
 {
 	int Status;
 	int i;
