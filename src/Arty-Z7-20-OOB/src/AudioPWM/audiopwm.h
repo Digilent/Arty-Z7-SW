@@ -110,6 +110,7 @@ struct bits {
 
 extern union ubitField Audio_BitField;
 
+
 /************************** Function Prototypes ******************************/
 
 u32 SinGenerator(u32 *pu32SinArray, u32 u32NrSamples,

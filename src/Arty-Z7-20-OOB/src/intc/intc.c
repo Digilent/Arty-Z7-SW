@@ -59,7 +59,7 @@ XStatus fnInitInterruptController(XScuGic *psIntc)
 {
 	XScuGic_Config *psIntcConfig;
 
-	psIntcConfig = XScuGic_LookupConfig(INTC_DEVICE_ID);
+	psIntcConfig = XScuGic_LookupConfig(XPAR_INTC_BASEADDR/*INTC_DEVICE_ID*/);
 	if (psIntcConfig == NULL)
 	{
 		return XST_FAILURE;

@@ -64,8 +64,10 @@
 
 /************************** Variable Definitions *****************************/
 
-volatile extern u8 DmaS2MMFlag;
-volatile extern u8 DmaMM2SFlag;
+//volatile extern u8 DmaS2MMFlag;
+//volatile extern u8 DmaMM2SFlag;
+extern u8 DmaS2MMFlag;
+extern u8 DmaMM2SFlag;
 
 /************************** Function Prototypes ******************************/
 

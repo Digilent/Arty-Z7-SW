@@ -52,4 +52,4 @@
  *
  *****************************************************************************/
 
-unsigned char u8Verbose = 0;
+unsigned char u8Verbose = 1; // default to 1
