@@ -63,8 +63,10 @@
 /************************** Constant Definitions *****************************/
 
 /************************** Variable Definitions *****************************/
-volatile u8 DmaS2MMFlag;
-volatile u8 DmaMM2SFlag;
+//volatile u8 DmaS2MMFlag;
+//volatile u8 DmaMM2SFlag;
+u8 DmaS2MMFlag;
+u8 DmaMM2SFlag;
 
 /************************** Function Prototypes ******************************/
 
@@ -189,10 +191,10 @@ XStatus fnConfigDma(XAxiDma *AxiDma)
 
 	//Make sure the DMA hardware is present in the project
 	//Ensures that the DMA hardware has been loaded
-	pCfgPtr = XAxiDma_LookupConfig(XPAR_AXIDMA_0_DEVICE_ID);
+	pCfgPtr = XAxiDma_LookupConfig(XPAR_AXI_DMA_0_BASEADDR/*XPAR_AXIDMA_0_DEVICE_ID*/);
 	if (!pCfgPtr)
 	{
-		xil_printf("\r\nNo config found for %d", XPAR_AXIDMA_0_DEVICE_ID);
+		xil_printf("\r\nNo config found for %d", XPAR_AXI_DMA_0_BASEADDR/*XPAR_AXIDMA_0_DEVICE_ID*/);
 		return XST_FAILURE;
 	}
 

@@ -61,7 +61,7 @@ extern unsigned char u8Verbose;
 
 /*! Checks the verbose flag and sends the message to standard output.
  */
-#define VERBOSE(x,...) 	{ if (u8Verbose) { xil_printf(x,##__VA_ARGS__); print("\r\n"); } }
+#define VERBOSE(x,...) 	{ if (u8Verbose) { xil_printf(x,##__VA_ARGS__); xil_printf("\r\n"); } }
 
 /*!
  * Enable and disable verbose messages with the following defines

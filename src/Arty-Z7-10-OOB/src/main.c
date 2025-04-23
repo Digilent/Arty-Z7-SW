@@ -86,7 +86,7 @@ static XAxiDma sAxiDma;
 const ivt_t ivt[] =
 {
 	//{XPAR_XQSPIPS_0_INTR, (Xil_InterruptHandler)XQspiPs_InterruptHandler, &sQSpi},
-	{XPAR_FABRIC_AXI_DMA_0_MM2S_INTROUT_INTR, (XInterruptHandler)fnMM2SInterruptHandler, &sAxiDma}
+	{XPAR_FABRIC_AXI_DMA_0_INTR, (XInterruptHandler)fnMM2SInterruptHandler, &sAxiDma}
 };
 
 /************************** Function Prototypes ******************************/
@@ -99,7 +99,7 @@ int main() {
 
 	init_platform();
 
-	CLR_VERBOSE_FLAG();
+	//CLR_VERBOSE_FLAG();
 
 	//This might not be printed properly, if CmdInit below uses the same UART as stdout
 	VERBOSE("Initializing...");
@@ -138,8 +138,9 @@ int main() {
 
 		VERBOSE("init:done");
 
-endinit:
-		fInitSuccess = fInitSuccess; //Have to add an instruction for the label
+    endinit:
+        //Have to add an instruction for the label
+		fInitSuccess = fInitSuccess;
 	}
 
 	xil_printf("Starting Arty Z7-20 Rev. B Out-of-Box Demo\r\n");
