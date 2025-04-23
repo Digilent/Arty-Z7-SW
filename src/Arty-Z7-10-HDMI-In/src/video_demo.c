@@ -42,15 +42,15 @@
 /*
  * XPAR redefines
  */
-#define DYNCLK_BASEADDR XPAR_AXI_DYNCLK_0_S_AXI_LITE_BASEADDR
-#define VGA_VDMA_ID XPAR_AXIVDMA_0_DEVICE_ID
-#define DISP_VTC_ID XPAR_VTC_0_DEVICE_ID
-#define VID_VTC_ID XPAR_VTC_1_DEVICE_ID
-#define VID_GPIO_ID XPAR_AXI_GPIO_VIDEO_DEVICE_ID
-#define VID_VTC_IRPT_ID XPS_FPGA3_INT_ID
-#define VID_GPIO_IRPT_ID XPS_FPGA4_INT_ID
-#define SCU_TIMER_ID XPAR_SCUTIMER_DEVICE_ID
-#define UART_BASEADDR XPAR_PS7_UART_0_BASEADDR
+#define DYNCLK_BASEADDR XPAR_AXI_DYNCLK_0_BASEADDR
+#define VGA_VDMA_ID XPAR_AXI_VDMA_0_BASEADDR
+#define DISP_VTC_ID XPAR_V_TC_0_BASEADDR
+#define VID_VTC_ID XPAR_V_TC_1_BASEADDR
+#define VID_GPIO_ID XPAR_AXI_GPIO_VIDEO_BASEADDR
+#define VID_VTC_IRPT_ID XPAR_FABRIC_V_TC_1_INTR
+#define VID_GPIO_IRPT_ID XPAR_FABRIC_AXI_GPIO_VIDEO_INTR
+#define SCU_TIMER_ID XPAR_SCUTIMER_BASEADDR
+#define UART_BASEADDR XPAR_UART0_BASEADDR
 
 /* ------------------------------------------------------------ */
 /*				Global Variables								*/
@@ -395,7 +395,7 @@ void DemoCRMenu()
 
 int DemoGetInactiveFrame(DisplayCtrl *DispCtrlPtr, VideoCapture *VideoCaptPtr)
 {
-	int i;
+	u32 i;
 	for (i=1; i<DISPLAY_NUM_FRAMES; i++)
 	{
 		if (DispCtrlPtr->curFrame == i && DispCtrlPtr->state == DISPLAY_RUNNING)
@@ -432,7 +432,7 @@ void DemoInvertFrame(u8 *srcFrame, u8 *destFrame, u32 width, u32 height, u32 str
 	 * Flush the framebuffer memory range to ensure changes are written to the
 	 * actual memory, and therefore accessible by the VDMA.
 	 */
-	Xil_DCacheFlushRange((unsigned int) destFrame, DEMO_MAX_FRAME);
+	Xil_DCacheFlushRange((INTPTR)destFrame, DEMO_MAX_FRAME);
 }
 
 
@@ -447,7 +447,7 @@ void DemoScaleFrame(u8 *srcFrame, u8 *destFrame, u32 srcWidth, u32 srcHeight, u3
 	int ix1y1, ix2y1, ix1y2, ix2y2; //indexes into the source frame for the four nearest source pixels to the destination pixel
 	float xDist, yDist; //distances between destination pixel and x1y1 source pixels in source frame coordinate system
 
-	int xcoDest, ycoDest; // Location of the destination pixel being operated on in the destination coordinate system
+	u32 xcoDest, ycoDest; // Location of the destination pixel being operated on in the destination coordinate system
 	int iy1; //Used to store the index of the first source pixel in the line with y1
 	int iDest; //index of the pixel data in the destination frame being operated on
 
@@ -503,7 +503,7 @@ void DemoScaleFrame(u8 *srcFrame, u8 *destFrame, u32 srcWidth, u32 srcHeight, u3
 	 * Flush the framebuffer memory range to ensure changes are written to the
 	 * actual memory, and therefore accessible by the VDMA.
 	 */
-	Xil_DCacheFlushRange((unsigned int) destFrame, DEMO_MAX_FRAME);
+	Xil_DCacheFlushRange((UINTPTR)destFrame, DEMO_MAX_FRAME);
 
 	return;
 }
@@ -593,7 +593,7 @@ void DemoPrintTest(u8 *frame, u32 width, u32 height, u32 stride, int pattern)
 		 * Flush the framebuffer memory range to ensure changes are written to the
 		 * actual memory, and therefore accessible by the VDMA.
 		 */
-		Xil_DCacheFlushRange((unsigned int) frame, DEMO_MAX_FRAME);
+		Xil_DCacheFlushRange((UINTPTR)frame, DEMO_MAX_FRAME);
 		break;
 	case DEMO_PATTERN_1:
 
@@ -657,7 +657,7 @@ void DemoPrintTest(u8 *frame, u32 width, u32 height, u32 stride, int pattern)
 		 * Flush the framebuffer memory range to ensure changes are written to the
 		 * actual memory, and therefore accessible by the VDMA.
 		 */
-		Xil_DCacheFlushRange((unsigned int) frame, DEMO_MAX_FRAME);
+		Xil_DCacheFlushRange((UINTPTR)frame, DEMO_MAX_FRAME);
 		break;
 	default :
 		xil_printf("Error: invalid pattern passed to DemoPrintTest");
@@ -666,8 +666,6 @@ void DemoPrintTest(u8 *frame, u32 width, u32 height, u32 stride, int pattern)
 
 void DemoISR(void *callBackRef, void *pVideo)
 {
-	char *data = (char *) callBackRef;
+	char *data = (char *)callBackRef;
 	*data = 1; //set fRefresh to 1
 }
-
-
