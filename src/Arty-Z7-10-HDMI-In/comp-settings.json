@@ -7,6 +7,9 @@
 		"\"__clang__\""
 	],
 	"USER_INCLUDE_DIRECTORIES" : [],
+	"USER_COMPILE_SOURCES" : [
+		"\"platform.c\""
+	],
 	"USER_COMPILE_WARNINGS_ALL" : [
 		"-Wall"
 	],
@@ -45,5 +48,5 @@
 	"USER_LINK_OTHER_FLAGS" : [
 		"\"-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -Wl,-build-id=none\""
 	],
-	"Arty-Z7-10-HDMI-In" : "src\\hdmi_in_wrapper\\hdmi_in_wrapper.xsa"
+	"Arty-Z7-10-HDMI-In" : "src\\hdmi_in_wrappe\\hdmi_in_wrappe.xsa"
 }
