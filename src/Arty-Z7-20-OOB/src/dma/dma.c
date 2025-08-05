@@ -59,14 +59,13 @@
 
 #include "dma.h"
 #include "../AudioPWM/audiopwm.h"
+#include "xinterrupt_wrap.h"
 
 /************************** Constant Definitions *****************************/
 
 /************************** Variable Definitions *****************************/
-//volatile u8 DmaS2MMFlag;
-//volatile u8 DmaMM2SFlag;
-u8 DmaS2MMFlag;
-u8 DmaMM2SFlag;
+volatile u8 DmaS2MMFlag;
+volatile u8 DmaMM2SFlag;
 
 /************************** Function Prototypes ******************************/
 
@@ -179,7 +178,8 @@ void fnMM2SInterruptHandler (void *Callback)
 /******************************************************************************
  * Function to configure the DMA in Interrupt mode, this implies that the scatter
  * gather function is disabled. Prior to calling this function, the user must
- * make sure that the Interrupts and the Interrupt Handlers have been configured
+ * make sure that the Interrupts have been configured. The Interrupt Handler for
+ * AXI DMA is configured inside this function.
  *
  * @return	XST_SUCCESS - if configuration was successful
  * 			XST_FAILURE - when the specification are not met
@@ -191,10 +191,10 @@ XStatus fnConfigDma(XAxiDma *AxiDma)
 
 	//Make sure the DMA hardware is present in the project
 	//Ensures that the DMA hardware has been loaded
-	pCfgPtr = XAxiDma_LookupConfig(XPAR_AXI_DMA_0_BASEADDR/*XPAR_AXIDMA_0_DEVICE_ID*/);
+	pCfgPtr = XAxiDma_LookupConfig(XPAR_AXI_DMA_0_BASEADDR);
 	if (!pCfgPtr)
 	{
-		xil_printf("\r\nNo config found for %d", XPAR_AXI_DMA_0_BASEADDR/*XPAR_AXIDMA_0_DEVICE_ID*/);
+		xil_printf("\r\nNo config found for %d", XPAR_AXI_DMA_0_BASEADDR);
 		return XST_FAILURE;
 	}
 
@@ -218,6 +218,12 @@ XStatus fnConfigDma(XAxiDma *AxiDma)
 	//Disable all the DMA related Interrupts
 	XAxiDma_IntrDisable(AxiDma, XAXIDMA_IRQ_ALL_MASK, XAXIDMA_DEVICE_TO_DMA);
 	XAxiDma_IntrDisable(AxiDma, XAXIDMA_IRQ_ALL_MASK, XAXIDMA_DMA_TO_DEVICE);
+
+	// Set up interrupts for AXI DMA controller
+    Status = XSetupInterruptSystem(AxiDma, &fnMM2SInterruptHandler,
+				       pCfgPtr->IntrId[0],
+				       pCfgPtr->IntrParent,
+				       XINTERRUPT_DEFAULT_PRIORITY);
 
 	//Enable all the DMA Interrupts
 	XAxiDma_IntrEnable(AxiDma, XAXIDMA_IRQ_ALL_MASK, XAXIDMA_DEVICE_TO_DMA);

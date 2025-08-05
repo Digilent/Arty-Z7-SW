@@ -60,17 +60,7 @@
 
 #define RETURN_ON_FAILURE(x) if ((x) != XST_SUCCESS) return XST_FAILURE;
 
-/*
- * Structure for interrupt id, handler and callback reference
- */
-typedef struct {
-	u8 id;
-	XInterruptHandler handler;
-	void *pvCallbackRef;
-} ivt_t;
-
 XStatus fnInitInterruptController(XScuGic *psIntc);
-void fnEnableInterrupts(XScuGic *psIntc, const ivt_t *prgsIvt, unsigned int csIVectors);
 
 
 #endif /* INTC_H_ */

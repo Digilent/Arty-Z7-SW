@@ -83,12 +83,6 @@ static XAxiDma sAxiDma;
 
 /****************** Static Global Variable Definitions ***********************/
 
-const ivt_t ivt[] =
-{
-	//{XPAR_XQSPIPS_0_INTR, (Xil_InterruptHandler)XQspiPs_InterruptHandler, &sQSpi},
-	{XPAR_FABRIC_AXI_DMA_0_INTR/*XPAR_FABRIC_AXI_DMA_0_MM2S_INTROUT_INTR*/, (XInterruptHandler)fnMM2SInterruptHandler, &sAxiDma}
-};
-
 /************************** Function Prototypes ******************************/
 
 /************************** Function Definitions *****************************/
@@ -99,7 +93,7 @@ int main() {
 
 	init_platform();
 
-	//CLR_VERBOSE_FLAG();
+	CLR_VERBOSE_FLAG();
 
 	//This might not be printed properly, if CmdInit below uses the same UART as stdout
 	VERBOSE("Initializing...");
@@ -131,10 +125,6 @@ int main() {
 
 		//Init rest of drivers here
 		USER_IO_RGB_INIT();
-
-		// Enable all interrupts in our interrupt vector table
-		// Make sure all driver instances using this IVT are initialized first
-		fnEnableInterrupts(&sIntc, &ivt[0], sizeof(ivt)/sizeof(ivt[0]));
 
 		VERBOSE("init:done");
 
