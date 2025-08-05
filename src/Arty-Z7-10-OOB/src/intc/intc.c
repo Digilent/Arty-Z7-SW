@@ -59,7 +59,7 @@ XStatus fnInitInterruptController(XScuGic *psIntc)
 {
 	XScuGic_Config *psIntcConfig;
 
-	psIntcConfig = XScuGic_LookupConfig(XPAR_INTC_BASEADDR/*INTC_DEVICE_ID*/);
+	psIntcConfig = XScuGic_LookupConfig(XPAR_INTC_BASEADDR);
 	if (psIntcConfig == NULL)
 	{
 		return XST_FAILURE;
@@ -79,25 +79,4 @@ XStatus fnInitInterruptController(XScuGic *psIntc)
 	Xil_ExceptionEnable();
 
 	return XST_SUCCESS;
-}
-
-/*
- * This function enables interrupts and connects interrupt service routines declared in
- * an interrupt vector table
- */
-void fnEnableInterrupts(XScuGic *psIntc, const ivt_t *prgsIvt, unsigned int csIVectors)
-{
-	unsigned int isIVector;
-
-	Xil_AssertVoid(psIntc != NULL);
-	Xil_AssertVoid(psIntc->IsReady == XIL_COMPONENT_IS_READY);
-
-	/* Hook up interrupt service routines from IVT */
-	for (isIVector = 0; isIVector < csIVectors; isIVector++)
-	{
-		XScuGic_Connect(psIntc, prgsIvt[isIVector].id, prgsIvt[isIVector].handler, prgsIvt[isIVector].pvCallbackRef);
-
-		/* Enable the interrupt vector at the interrupt controller */
-		XScuGic_Enable(psIntc, prgsIvt[isIVector].id);
-	}
 }
