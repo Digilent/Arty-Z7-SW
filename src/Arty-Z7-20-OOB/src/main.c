@@ -74,6 +74,7 @@
 #include "user_io/user_io.h"
 #include "AudioPWM/audiopwm.h"
 #include "dma/dma.h"
+#include "xil_mmu.h"
 
 /************************** Constant Definitions *****************************/
 
@@ -94,6 +95,12 @@ int main() {
 	init_platform();
 
 	CLR_VERBOSE_FLAG();
+
+	// Disable caching for the memory area used by the audio interface for storing samples.
+	// Without this, some of the audio samples might not reach the DDR before the DMA
+	// controller starts to read them.
+	Xil_SetTlbAttributes((INTPTR)AUDIO_MEM_ADDR, NORM_NONCACHE);
+	Xil_SetTlbAttributes((INTPTR)(AUDIO_MEM_ADDR+1024*1024), NORM_NONCACHE);
 
 	//This might not be printed properly, if CmdInit below uses the same UART as stdout
 	VERBOSE("Initializing...");
