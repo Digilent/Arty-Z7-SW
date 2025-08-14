@@ -43,13 +43,13 @@
  * XPAR redefines
  */
 #define DYNCLK_BASEADDR XPAR_AXI_DYNCLK_0_BASEADDR
-#define VGA_VDMA_ID XPAR_AXI_VDMA_0_BASEADDR
-#define DISP_VTC_ID XPAR_V_TC_0_BASEADDR
-#define VID_VTC_ID XPAR_V_TC_1_BASEADDR
-#define VID_GPIO_ID XPAR_AXI_GPIO_VIDEO_BASEADDR
-#define VID_VTC_IRPT_ID XPAR_FABRIC_V_TC_1_INTR
-#define VID_GPIO_IRPT_ID XPAR_FABRIC_AXI_GPIO_VIDEO_INTR
-#define SCU_TIMER_ID XPAR_SCUTIMER_BASEADDR
+#define VGA_VDMA_BASEADDR XPAR_AXI_VDMA_0_BASEADDR
+#define DISP_VTC_BASEADDR XPAR_V_TC_0_BASEADDR
+#define VID_VTC_BASEADDR XPAR_V_TC_1_BASEADDR
+#define VID_GPIO_BASEADDR XPAR_AXI_GPIO_VIDEO_BASEADDR
+#define VID_VTC_IRPT_ID XPAR_V_TC_1_INTERRUPTS
+#define VID_GPIO_IRPT_ID XPAR_AXI_GPIO_VIDEO_INTERRUPTS
+#define SCU_TIMER_BASEADDR XPAR_SCUTIMER_BASEADDR
 #define UART_BASEADDR XPAR_UART0_BASEADDR
 
 /* ------------------------------------------------------------ */
@@ -74,10 +74,10 @@ u8 *pFrames[DISPLAY_NUM_FRAMES]; //array of pointers to the frame buffers
 /*
  * Interrupt vector table
  */
-const ivt_t ivt[] = {
-	videoGpioIvt(VID_GPIO_IRPT_ID, &videoCapt),
-	videoVtcIvt(VID_VTC_IRPT_ID, &(videoCapt.vtc))
-};
+// const ivt_t ivt[] = {
+// 	videoGpioIvt(VID_GPIO_IRPT_ID, &videoCapt),
+// 	videoVtcIvt(VID_VTC_IRPT_ID, &(videoCapt.vtc))
+// };
 
 /* ------------------------------------------------------------ */
 /*				Procedure Definitions							*/
@@ -110,15 +110,15 @@ void DemoInitialize()
 	/*
 	 * Initialize a timer used for a simple delay
 	 */
-	TimerInitialize(SCU_TIMER_ID);
+	TimerInitialize(SCU_TIMER_BASEADDR);
 
 	/*
 	 * Initialize VDMA driver
 	 */
-	vdmaConfig = XAxiVdma_LookupConfig(VGA_VDMA_ID);
+	vdmaConfig = XAxiVdma_LookupConfig(VGA_VDMA_BASEADDR);
 	if (!vdmaConfig)
 	{
-		xil_printf("No video DMA found for ID %d\r\n", VGA_VDMA_ID);
+		xil_printf("No video DMA found for ID %d\r\n", VGA_VDMA_BASEADDR);
 		return;
 	}
 	Status = XAxiVdma_CfgInitialize(&vdma, vdmaConfig, vdmaConfig->BaseAddress);
@@ -131,7 +131,7 @@ void DemoInitialize()
 	/*
 	 * Initialize the Display controller and start it
 	 */
-	Status = DisplayInitialize(&dispCtrl, &vdma, DISP_VTC_ID, DYNCLK_BASEADDR, pFrames, DEMO_STRIDE);
+	Status = DisplayInitialize(&dispCtrl, &vdma, DISP_VTC_BASEADDR, DYNCLK_BASEADDR, pFrames, DEMO_STRIDE);
 	if (Status != XST_SUCCESS)
 	{
 		xil_printf("Display Ctrl initialization failed during demo initialization%d\r\n", Status);
@@ -147,17 +147,17 @@ void DemoInitialize()
 	/*
 	 * Initialize the Interrupt controller and start it.
 	 */
-	Status = fnInitInterruptController(&intc);
-	if(Status != XST_SUCCESS) {
-		xil_printf("Error initializing interrupts");
-		return;
-	}
-	fnEnableInterrupts(&intc, &ivt[0], sizeof(ivt)/sizeof(ivt[0]));
+	// Status = fnInitInterruptController(&intc);
+	// if(Status != XST_SUCCESS) {
+	// 	xil_printf("Error initializing interrupts");
+	// 	return;
+	// }
+	// fnEnableInterrupts(&intc, &ivt[0], sizeof(ivt)/sizeof(ivt[0]));
 
 	/*
 	 * Initialize the Video Capture device
 	 */
-	Status = VideoInitialize(&videoCapt, &intc, &vdma, VID_GPIO_ID, VID_VTC_ID, VID_VTC_IRPT_ID, pFrames, DEMO_STRIDE, DEMO_START_ON_DET);
+	Status = VideoInitialize(&videoCapt, &intc, &vdma, VID_GPIO_BASEADDR, VID_VTC_BASEADDR, VID_VTC_IRPT_ID, pFrames, DEMO_STRIDE, DEMO_START_ON_DET);
 	if (Status != XST_SUCCESS)
 	{
 		xil_printf("Video Ctrl initialization failed during demo initialization%d\r\n", Status);
