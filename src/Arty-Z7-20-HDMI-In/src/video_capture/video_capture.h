@@ -154,7 +154,9 @@ typedef struct {
 
 int VideoStop(VideoCapture *videoPtr);
 int VideoStart(VideoCapture *videoPtr);
-int VideoInitialize(VideoCapture *videoPtr, INTC *intCtrl, XAxiVdma *vdma, u32 gpioId, u32 vtcId, u32 vtcIrptId, u8 *framePtr[VIDEO_NUM_FRAMES], u32 stride, u32 startOnDet);
+int VideoInitialize(VideoCapture *videoPtr, INTC *intCtrl, XAxiVdma *vdma,
+                    u32 gpioId, u32 vtcId, u32 vtcIrptId,
+                    u8 *framePtr[VIDEO_NUM_FRAMES], u32 stride, u32 startOnDet);
 int VideoChangeFrame(VideoCapture *videoPtr, u32 frameIndex);
 void VideoSetCallback(VideoCapture *videoPtr, VideoCallBack CallBackFunc, void *CallBackRef);
 void GpioIsr(void *InstancePtr);
