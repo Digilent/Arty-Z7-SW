@@ -48,5 +48,5 @@
 	"USER_LINK_OTHER_FLAGS" : [
 		"\"-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -Wl,-build-id=none\""
 	],
-	"Arty-Z7-20-HDMI-In" : "src\\hdmi_in_wrappe\\hdmi_in_wrappe.xsa"
+	"Arty-Z7-20-HDMI-In" : "src\\hdmi_in_wrapper\\hdmi_in_wrapper.xsa"
 }
